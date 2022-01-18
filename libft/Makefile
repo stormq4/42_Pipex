@@ -41,7 +41,8 @@ ft_strtrim.c \
 ft_substr.c \
 ft_tolower.c \
 ft_toupper.c \
-ft_check_malloc.c
+ft_check_malloc.c \
+ft_split_free.c
 
 SRCS_BONUS := \
 ft_lstadd_back.c \

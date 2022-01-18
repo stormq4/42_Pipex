@@ -6,13 +6,13 @@
 /*   By: sde-quai <sde-quai@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/12/02 12:56:22 by sde-quai      #+#    #+#                 */
-/*   Updated: 2021/12/02 12:56:23 by sde-quai      ########   odam.nl         */
+/*   Updated: 2022/01/12 11:34:03 by stormdequay   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_putnbr_rec(long long n, int fd)
+static void	ft_putnbr_rec(long long n, int fd)
 {
 	if (n >= 10)
 	{

@@ -6,7 +6,9 @@ CFLAGS := -Wall -Wextra -Werror
 
 CC := gcc
 
-SRCS :=		src/pipex.c 
+SRCS :=		src/pipex.c \
+			src/child.c \
+			src/execute.c
 
 HEADFILES := pipex.h
 
@@ -15,7 +17,7 @@ LIBFT := libft/libft.a
 all : $(NAME)
 
 $(NAME) : $(SRCS) $(LIBFT)
-	$(CC) -o $@ $^ 
+	$(CC) $(CFLAGS) -o $@ $^ 
 
 $(LIBFT) : 
 	$(MAKE) -C libft

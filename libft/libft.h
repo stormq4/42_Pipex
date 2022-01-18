@@ -6,7 +6,7 @@
 /*   By: sde-quai <sde-quai@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/12/02 12:59:54 by sde-quai      #+#    #+#                 */
-/*   Updated: 2021/12/17 10:13:14 by sde-quai      ########   odam.nl         */
+/*   Updated: 2022/01/12 11:32:07 by stormdequay   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,6 @@ void			ft_lstiter(t_list *lst, void (*f)(void *));
 t_list			*ft_lstmap(t_list *lst, void *(*f)(void *), \
 void (*del)(void *));
 void			ft_check_malloc(void *ptr);
+void			ft_split_free(char **split);
 
 #endif
