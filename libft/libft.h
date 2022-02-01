@@ -6,7 +6,7 @@
 /*   By: sde-quai <sde-quai@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/12/02 12:59:54 by sde-quai      #+#    #+#                 */
-/*   Updated: 2022/01/12 11:32:07 by stormdequay   ########   odam.nl         */
+/*   Updated: 2022/02/01 11:07:14 by sde-quai      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,5 +71,6 @@ t_list			*ft_lstmap(t_list *lst, void *(*f)(void *), \
 void (*del)(void *));
 void			ft_check_malloc(void *ptr);
 void			ft_split_free(char **split);
+char			*ft_strdup_c(const char *s1, char c);
 
 #endif

@@ -7,7 +7,7 @@ CFLAGS := -Wall -Wextra -Werror
 CC := gcc
 
 SRCS :=		src/pipex.c \
-			src/child.c \
+			src/fork_pipe.c \
 			src/execute.c
 
 HEADFILES := pipex.h
@@ -29,6 +29,6 @@ fclean :
 	$(MAKE) fclean -C libft
 	rm pipex
 
-re : flclean all
+re : fclean all
 
 .PHONY : all, clean, flcean, re

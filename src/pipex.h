@@ -6,7 +6,7 @@
 /*   By: stormdequay <stormdequay@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/12/20 12:10:37 by stormdequay   #+#    #+#                 */
-/*   Updated: 2022/01/11 11:02:44 by stormdequay   ########   odam.nl         */
+/*   Updated: 2022/01/31 14:18:26 by sde-quai      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,25 @@
 # include <unistd.h>
 # include "../libft/libft.h"
 # include <sys/stat.h>
+# include <sys/errno.h>
 # include <fcntl.h>
 # include <stdio.h>
+# include <limits.h>
 
-void	child_one(int f1, char *cmd1, int *end, char **env);
-void	child_two(int f2, char *cmd2, int *end, char **env);
-void	execute_execve(char *cmd, char	**env);
+typedef struct s_pipex {
+	int	f1;
+	int	f2;
+	int	cmd_count;
+	int	max_cmd;
+	int	fd;
+}				t_pipex;
+
+typedef struct s_envp {
+	char	**envp;
+	char	**paths_2d;
+}				t_envp;
+
+void	execute_execve(char *cmd, t_envp *paths);
+int		fork_pipe(t_pipex *p, char *cmd, t_envp *envp, int flag);
 
 #endif

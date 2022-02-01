@@ -3,50 +3,52 @@
 /*                                                        ::::::::            */
 /*   pipex.c                                            :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: stormdequay <stormdequay@student.codam.      +#+                     */
+/*   By: sde-quai <sde-quai@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/12/20 12:10:29 by stormdequay   #+#    #+#                 */
-/*   Updated: 2022/01/12 13:42:42 by stormdequay   ########   odam.nl         */
+/*   Created: 2022/01/20 15:26:58 by sde-quai      #+#    #+#                 */
+/*   Updated: 2022/01/31 14:48:05 by sde-quai      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	pipex(int f1, int f2, char **argv, char **envp)
+static char	*find_paths(char **env)
 {
-	int		end[2];
-	// int		status;
-	pid_t	child1;
-	pid_t	child2;
+	while (ft_strncmp("PATH", *env, 4))
+		env++;
+	return (*env + 5);
+}
 
-	pipe(end);
-	child1 = fork();
-	if (child1 < 0)
-		return (perror("Fork: left pipe"));
-	if (child1 == 0)
-		child_one(f1, argv[2], end, envp);
-	child2 = fork();
-	if (child2 < 0)
-		return (perror("Fork: right pipe"));
-	if (child2 == 0)
-		child_two(f2, argv[3], end, envp);
-	close(end[0]);
-	close(end[1]);
-	waitpid(child1, NULL, 0);
-	waitpid(child2, NULL, 0);
+static void	pipex(t_pipex *p, char **argv, t_envp *paths)
+{
+	p->fd = p->f1;
+	while (p->cmd_count < p->max_cmd - 1)
+	{
+		p->fd = fork_pipe(p, argv[p->cmd_count], paths, -1);
+		p->cmd_count++;
+	}
+	p->fd = fork_pipe(p, argv[p->cmd_count], paths, p->f2);
+	close(p->fd);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	int	f1;
-	int	f2;
+	t_pipex	p;
+	t_envp	paths;
 
-	f1 = open(argv[1], O_RDONLY);
-	f2 = open(argv[argc - 1], O_CREAT | O_RDWR | O_TRUNC, 0644);
-	if (f1 < 0 || f2 < 0)
-		exit(1);
-	pipex(f1, f2, argv, envp);
-	close(f1);
-	close(f2);
+	p.f1 = open(argv[1], O_RDONLY);
+	p.f2 = open(argv[argc - 1], O_CREAT | O_RDWR | O_TRUNC, 0644);
+	p.cmd_count = 2;
+	p.max_cmd = argc - 1;
+	if (p.f1 < 0 || p.f1 > OPEN_MAX || p.f2 < 0 || p.f2 > OPEN_MAX)
+	{
+		perror("");
+		exit(errno);
+	}
+	paths.envp = envp;
+	paths.paths_2d = ft_split(find_paths(envp), ':');
+	ft_check_malloc(paths.paths_2d);
+	pipex(&p, argv, &paths);
+	ft_split_free(paths.paths_2d);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: stormdequay <stormdequay@student.codam.      +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/12/22 09:49:07 by stormdequay   #+#    #+#                 */
-/*   Updated: 2022/01/12 11:44:53 by stormdequay   ########   odam.nl         */
+/*   Updated: 2022/02/01 11:52:26 by sde-quai      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,6 @@ static char	**ft_split_null_termininate(char **cmd1_2d)
 		i++;
 	cmd1_2d[i] = NULL;
 	return (cmd1_2d);
-}
-
-static char	*find_paths(char **env)
-{
-	while (ft_strncmp("PATH", *env, 4))
-		env++;
-	return (*env + 5);
 }
 
 static char	*get_command(char *cmd, char **paths)
@@ -50,29 +43,52 @@ static char	*get_command(char *cmd, char **paths)
 	return (NULL);
 }
 
-void	execute_execve(char *cmd, char **env)
+static char	**get_array_2d_from_direct_path(char *cmd_path)
 {
+	char	*cmd;	
 	char	**cmd_2d;
-	char	**paths_2d;
-	char	*cmd_path;
-	int		check_execve;
 
+	cmd = ft_strrchr(cmd_path, '/');
 	cmd_2d = ft_split(cmd, ' ');
 	ft_check_malloc(cmd_2d);
 	ft_split_null_termininate(cmd_2d);
-	paths_2d = ft_split(find_paths(env), ':');
-	ft_check_malloc(paths_2d);
-	cmd_path = get_command(cmd_2d[0], paths_2d);
-	printf("%s \n", cmd_path);
-	if (!cmd_path)
+	return (cmd_2d);
+}
+
+static char	*get_direct_path(char *cmd)
+{
+	char	*direct_path;
+
+	direct_path = ft_strdup_c(cmd, ' ');
+	ft_check_malloc(direct_path);
+	return (direct_path);
+}
+
+void	execute_execve(char *cmd, t_envp *paths)
+{
+	char	**cmd_2d;
+	char	*cmd_path;
+	char	*direct_path;
+
+	direct_path = get_direct_path(cmd);
+	if (!access(direct_path, F_OK))
 	{
-		perror("No path found");
-		exit(1);
+		cmd_path = direct_path;
+		cmd_2d = get_array_2d_from_direct_path(cmd);
 	}
-	check_execve = execve(cmd_path, cmd_2d, env);
+	else
+	{
+		cmd_2d = ft_split(cmd, ' ');
+		ft_check_malloc(cmd_2d);
+		ft_split_null_termininate(cmd_2d);
+		cmd_path = get_command(cmd_2d[0], paths->paths_2d);
+	}
+	if (execve(cmd_path, cmd_2d, paths->envp) < 0)
+	{
+		ft_putstr_fd(cmd, 2);
+		ft_putstr_fd(": command not found\n", 2);
+		exit(127);
+	}
 	free(cmd_path);
 	ft_split_free(cmd_2d);
-	ft_split_free(paths_2d);
-	if (check_execve < 0)
-		return (perror("Execution failed"));
 }
